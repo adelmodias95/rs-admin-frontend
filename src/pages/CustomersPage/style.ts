@@ -44,3 +44,17 @@ export const Table = styled.table`
         }
     }
 `;
+
+export const ModalCloseButton = styled.button`
+    display: block;
+    margin-left: auto;
+    margin-bottom: 2rem;
+`;
+
+export const Form = styled.form`
+    input,
+    select,
+    button {
+        display: block;
+    }
+`;

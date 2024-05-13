@@ -87,6 +87,12 @@ const GlobalStyles = createGlobalStyle`
         padding-top: 2rem;
         padding-bottom: 2rem;
     }
+
+    .ReactModal__Content{
+        max-width: 600px;
+        max-height: 400px;
+        margin: auto;
+    }
 `;
 
 export { VARIABLES, GlobalStyles };
