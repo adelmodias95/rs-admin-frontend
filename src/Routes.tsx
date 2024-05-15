@@ -7,6 +7,7 @@ import { action as loginAction, LoginPage } from "./pages/LoginPage/LoginPage";
 import { LayoutComponent } from "./layouts/LayoutComponent";
 import { ServicesPage } from "./pages/ServicesPage";
 import { CustomersPage } from "./pages/CustomersPage";
+import { CustomerSinglePage } from "./pages/CustomerSinglePage";
 
 const router = createBrowserRouter([
     {
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
                 element: (
                     <PrivateRoute>
                         <CustomersPage />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/clientes/:id",
+                element: (
+                    <PrivateRoute>
+                        <CustomerSinglePage />
                     </PrivateRoute>
                 ),
             },

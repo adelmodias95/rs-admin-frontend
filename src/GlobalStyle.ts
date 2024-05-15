@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { styled, createGlobalStyle } from "styled-components";
 
 const VARIABLES = {
     lightTheme: {
@@ -9,8 +9,7 @@ const VARIABLES = {
         bodyBgLightTheme: "#f1f4f6",
         bodyBgDarkTheme: "#f1f4f6",
         hoverColor: "#9F4388",
-        boxShadow:
-            "0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03)",
+        boxShadow: "0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03)",
     },
 
     borderRadius: `5px`,
@@ -95,6 +94,71 @@ const GlobalStyles = createGlobalStyle`
         max-height: max-content;
         margin: auto;
     }
+
+    form {
+        input,
+        select {
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 10px 1rem;
+            border-radius: ${VARIABLES.borderRadius};
+            border: 1px solid ${VARIABLES.lightTheme.subTitleColor};
+            background: white;
+            color: ${VARIABLES.lightTheme.textColor};
+
+            &:disabled{
+                background: #f1f1f1;
+                color: ${VARIABLES.lightTheme.textColor};
+                cursor: not-allowed;
+            }
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            background: ${VARIABLES.lightTheme.mainColor};
+            color: white;
+            border: none;
+            padding: 10px 1rem;
+            cursor: pointer;
+            transition: 0.5s all;
+
+            &:hover {
+                background: ${VARIABLES.lightTheme.hoverColor};
+            }
+
+            &:disabled{
+                /* background: #f1f1f1;
+                color: ${VARIABLES.lightTheme.textColor};
+                border: 1px solid ${VARIABLES.lightTheme.subTitleColor}; */
+                cursor: not-allowed;
+            }
+        }
+    }
 `;
 
-export { VARIABLES, GlobalStyles };
+const PageHeaderContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+
+    button {
+        background: ${VARIABLES.lightTheme.mainColor};
+        color: white;
+        border: none;
+        padding: 10px 1rem;
+        cursor: pointer;
+        transition: 0.5s all;
+        width: 100%;
+        max-width: max-content;
+
+        &:hover {
+            background: ${VARIABLES.lightTheme.hoverColor};
+        }
+    }
+`;
+
+export { VARIABLES, GlobalStyles, PageHeaderContainer };
