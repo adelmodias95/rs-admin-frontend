@@ -13,6 +13,8 @@ const VARIABLES = {
             "0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03)",
     },
 
+    borderRadius: `5px`,
+
     // Responsive
     screenXl: "1200px",
     screenLg: "992px",
@@ -90,7 +92,7 @@ const GlobalStyles = createGlobalStyle`
 
     .ReactModal__Content{
         max-width: 600px;
-        max-height: 400px;
+        max-height: max-content;
         margin: auto;
     }
 `;

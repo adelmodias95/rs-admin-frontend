@@ -3,7 +3,7 @@ import ReactModal from "react-modal";
 
 import api from "../../services/api";
 
-import { Table, Form, ModalCloseButton } from "./style";
+import { PageHeaderContainer, Table, Form, ModalCloseButton } from "./style";
 
 const CustomersPage = () => {
     let [customers, setCustomers] = useState([]);
@@ -69,10 +69,12 @@ const CustomersPage = () => {
 
     return (
         <>
-            <h1>Meus Clientes</h1>
-            <button onClick={() => setOpenModal(true)}>
-                Adicionar cliente
-            </button>
+            <PageHeaderContainer>
+                <h1>Meus Clientes</h1>
+                <button onClick={() => setOpenModal(true)}>
+                    Adicionar cliente
+                </button>
+            </PageHeaderContainer>
 
             <Table>
                 <thead>
@@ -124,7 +126,13 @@ const CustomersPage = () => {
                 overlayClassName="modal-overlay"
                 // ariaHideApp={false}
             >
-                <ModalCloseButton onClick={() => {setOpenModal(false)}}>X</ModalCloseButton>
+                <ModalCloseButton
+                    onClick={() => {
+                        setOpenModal(false);
+                    }}
+                >
+                    X
+                </ModalCloseButton>
                 <Form onSubmit={addCustomer}>
                     <input type="text" name="firstName" placeholder="Nome" />
                     <input
