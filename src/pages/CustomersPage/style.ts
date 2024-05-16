@@ -54,6 +54,7 @@ export const Table = styled.table`
             fill: ${VARIABLES.lightTheme.titleColor};
             cursor: pointer;
             transition: 0.5s all;
+            pointer-events: none;
 
             &:hover {
                 fill: ${VARIABLES.lightTheme.mainColor};

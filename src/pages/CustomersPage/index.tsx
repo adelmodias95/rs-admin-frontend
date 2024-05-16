@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import { Link } from "react-router-dom";
 import { FaEye, FaRegTrashAlt } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 import api from "../../services/api";
 
@@ -48,9 +49,7 @@ const CustomersPage = () => {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem(
-                        "accessToken"
-                    )}`,
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             }
         )
@@ -64,6 +63,46 @@ const CustomersPage = () => {
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    async function deleteCustomer(event) {
+        event.preventDefault();
+        let customerId = event.target.dataset.customerId;
+
+        Swal.fire({
+            title: "Você tem certeza?",
+            text: "Essa ação é irreversível.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#C667AD",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, deletar cadastro!",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                api.delete("customers", {
+                    data: { id: customerId },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                })
+                    .then((response) => {
+                        let customersArr = [...customers];
+                        let newCustomersArr = customersArr.filter((item) => item.id !== Number(customerId));
+
+                        setCustomers(newCustomersArr);
+
+                        Swal.fire({
+                            title: "Deletado!",
+                            text: "Cadastro deletado com sucesso.",
+                            icon: "success",
+                        });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        });
     }
 
     useEffect(() => {
@@ -102,9 +141,9 @@ const CustomersPage = () => {
                                 <Link to={"/clientes/" + customer.id} title="Visualizar cadastro completo">
                                     <FaEye />{" "}
                                 </Link>
-                                <Link to={"/clientes/" + customer.id} title="Deletar cadastro">
+                                <a href="" onClick={deleteCustomer} data-customer-id={customer.id} title="Deletar cadastro">
                                     <FaRegTrashAlt />
-                                </Link>
+                                </a>
                             </td>
                         </tr>
                     ))}
