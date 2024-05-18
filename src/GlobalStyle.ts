@@ -89,6 +89,23 @@ const GlobalStyles = createGlobalStyle`
         padding-bottom: 2rem;
     }
 
+    h1, h2, h3, h4, h5, h6 {
+        color: ${VARIABLES.lightTheme.titleColor};
+        margin-bottom: 1.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    p{
+        color: ${VARIABLES.lightTheme.textColor};
+        font-size: 1rem;
+        line-height: 150%;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+    }
+
     .ReactModal__Content{
         max-width: 600px;
         max-height: max-content;

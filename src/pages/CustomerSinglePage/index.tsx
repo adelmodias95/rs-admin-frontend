@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import api from "../../services/api";
 
 import { PageHeaderContainer } from "../../GlobalStyle";
+import { CustomerHistory } from "../../components/CustomerHistory";
 
 export const CustomerSinglePage = () => {
     const { id } = useParams();
@@ -98,7 +99,7 @@ export const CustomerSinglePage = () => {
                 </button>
             </PageHeaderContainer>
 
-            <form>
+            <form style={{marginBottom: '4rem'}}>
                 <input type="text" name="firstName" placeholder="Nome" value={customer.firstName} disabled={editAllowed ? false : true} />
                 <input type="text" name="lastName" placeholder="Sobrenome" value={customer.lastName} disabled={editAllowed ? false : true} />
                 <input type="text" name="phone" placeholder="Telefone" value={customer.phone} disabled={editAllowed ? false : true} />
@@ -112,6 +113,8 @@ export const CustomerSinglePage = () => {
                     Salvar edição
                 </button>
             </form>
+
+            <CustomerHistory />
         </>
     );
 };
