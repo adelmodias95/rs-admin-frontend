@@ -4,6 +4,31 @@ export const CustomerHistory = () => {
     const [customerHistory] = useState([
         {
             id: 19,
+            type: "observation",
+            typeTranslated: "Observação",
+
+            observationText: "lorem ipsum dolor met si.",
+
+            inputChanged: "",
+            oldValue: "",
+            newValue: "",
+
+            serviceName: "",
+            price: null,
+            timeHours: null,
+            timeMinutes: null,
+
+            paymentValue: null,
+            paymentMethod: null,
+
+            description: "",
+            authorId: 1,
+            authorName: "Contato@adelmodias.com.br",
+            createdAt: "2024-05-17T23:00:00.147Z",
+            updatedAt: "2024-05-17T23:00:00.147Z",
+        },
+        {
+            id: 19,
             type: "payment-reversal",
             typeTranslated: "Estorno de pagamento",
 
@@ -148,10 +173,18 @@ export const CustomerHistory = () => {
                             ""
                         )}
 
-                        {history.type !== "data-created" ? (
+                        {history.type === "observation" ? (
+                            <p>
+                                <strong>Observação:</strong> {history.observationText}
+                            </p>
+                        ) : (
+                            ""
+                        )}
+
+                        {history.type !== "data-created" && history.type !== "observation" ? (
                             <>
                                 <p>
-                                    <strong>Observação:</strong> {history.description}
+                                    <strong>Comentário:</strong> {history.description}
                                 </p>
                             </>
                         ) : (
