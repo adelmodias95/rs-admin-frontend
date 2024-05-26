@@ -1,122 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+
+import api from "../../services/api";
 
 export const CustomerHistory = () => {
-    const [customerHistory] = useState([
-        {
-            id: 19,
-            type: "observation",
-            typeTranslated: "Observação",
+    const { id } = useParams();
+    const [customerHistory, setCustomerHistory] = useState([]);
 
-            observationText: "lorem ipsum dolor met si.",
+    async function getCustomerHistory() {
+        api.get(`/customer-history/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        })
+            .then((response) => {
+                let dataJson = response.data;
+                console.log("dataJson => ", dataJson);
+                setCustomerHistory(dataJson);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
-            inputChanged: "",
-            oldValue: "",
-            newValue: "",
-
-            serviceName: "",
-            price: null,
-            timeHours: null,
-            timeMinutes: null,
-
-            paymentValue: null,
-            paymentMethod: null,
-
-            description: "",
-            authorId: 1,
-            authorName: "Contato@adelmodias.com.br",
-            createdAt: "2024-05-17T23:00:00.147Z",
-            updatedAt: "2024-05-17T23:00:00.147Z",
-        },
-        {
-            id: 19,
-            type: "payment-reversal",
-            typeTranslated: "Estorno de pagamento",
-
-            inputChanged: "",
-            oldValue: "",
-            newValue: "",
-
-            serviceName: "",
-            price: null,
-            timeHours: null /* 1 a 24 */,
-            timeMinutes: null /* 0 a 59 */,
-
-            paymentValue: 100.0,
-            paymentMethod: "Pix",
-
-            authorId: 1,
-            authorName: "Contato@adelmodias.com.br",
-            description: "Estorno realizado para o cliente no pix pelo motivo de blablabla",
-            createdAt: "2024-05-17T23:00:00.147Z",
-            updatedAt: "2024-05-17T23:00:00.147Z",
-        },
-        {
-            id: 19,
-            type: "payment",
-            typeTranslated: "Pagamento",
-
-            inputChanged: "",
-            oldValue: "",
-            newValue: "",
-
-            serviceName: "",
-            price: null,
-            timeHours: null /* 1 a 24 */,
-            timeMinutes: null /* 0 a 59 */,
-
-            paymentValue: 250.55,
-            paymentMethod: "Pix",
-
-            authorId: 1,
-            authorName: "Contato@adelmodias.com.br",
-            description: "",
-            createdAt: "2024-05-17T23:00:00.147Z",
-            updatedAt: "2024-05-17T23:00:00.147Z",
-        },
-        {
-            id: 19,
-            type: "service",
-            typeTranslated: "Serviço realizado",
-
-            inputChanged: "",
-            oldValue: "",
-            newValue: "",
-
-            serviceName: "Massagem relaxante",
-            servicePrice: 250.0,
-            timeHours: 2 /* 1 a 24 */,
-            timeMinutes: 45 /* 0 a 59 */,
-
-            authorId: 1,
-            authorName: "Contato@adelmodias.com.br",
-            description: "Cliente realizou o serviço blablabla...",
-            createdAt: "2024-05-17T23:00:00.147Z",
-            updatedAt: "2024-05-17T23:00:00.147Z",
-        },
-        {
-            id: 19,
-            type: "data-changed",
-            typeTranslated: "Dado alterado",
-            oldValue: "(11) 90000-0000",
-            newValue: "(11) 91234-5678",
-            authorId: 1,
-            authorName: "Contato@adelmodias.com.br",
-            description: "Cliente solicitou alteração do número de telefone",
-            createdAt: "2024-05-16T23:00:00.147Z",
-            updatedAt: "2024-05-16T23:00:00.147Z",
-        },
-        {
-            id: 19,
-            type: "data-created",
-            typeTranslated: "Cliente cadastrado no sistema",
-            oldValue: "",
-            newValue: "",
-            authorId: 1,
-            authorName: "Contato@adelmodias.com.br",
-            createdAt: "2024-05-16T23:00:00.147Z",
-            updatedAt: "2024-05-16T23:00:00.147Z",
-        },
-    ]);
+    useEffect(() => {
+        getCustomerHistory();
+    }, []);
 
     return (
         <>
