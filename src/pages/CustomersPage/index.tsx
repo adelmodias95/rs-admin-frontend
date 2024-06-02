@@ -30,22 +30,22 @@ const CustomersPage = () => {
 
     async function addCustomer(event) {
         event.preventDefault();
-        let firstName = event.target.firstName.value;
-        let lastName = event.target.lastName.value;
+        let name = event.target.name.value;
         let phone = event.target.phone.value;
         let email = event.target.email.value;
         let cpf = event.target.cpf.value;
         let gender = event.target.gender.value;
+        let userId = customers[0].userId;
 
         api.post(
             "customers",
             {
-                firstName,
-                lastName,
+                name,
                 phone,
                 email,
                 cpf,
                 gender,
+                userId,
             },
             {
                 headers: {
@@ -55,10 +55,15 @@ const CustomersPage = () => {
         )
             .then((response) => {
                 let resJson = response.data;
-                console.log("resJson => ", resJson);
-                setCustomers([resJson, ...customers]);
 
+                setCustomers([resJson, ...customers]);
                 setOpenModal(false);
+
+                Swal.fire({
+                    title: "Cadastrado com sucesso!",
+                    text: "O novo cliente foi cadastrado no banco de dados.",
+                    icon: "success",
+                });
             })
             .catch((error) => {
                 console.log(error);
@@ -131,9 +136,7 @@ const CustomersPage = () => {
                     {customers.map((customer) => (
                         <tr key={customer.id}>
                             <td style={{ textAlign: "center" }}>{customer.id}</td>
-                            <td>
-                                {customer.firstName} {customer.lastName}
-                            </td>
+                            <td>{customer.name}</td>
                             <td>{customer.phone ? customer.phone : "Não informado"}</td>
                             <td>{customer.email ? customer.email : "Não informado"}</td>
                             <td>{new Intl.DateTimeFormat("pt-BR").format(new Date(customer.createdAt))}</td>
@@ -165,8 +168,7 @@ const CustomersPage = () => {
                     X
                 </ModalCloseButton>
                 <form onSubmit={addCustomer}>
-                    <input type="text" name="firstName" placeholder="Nome" />
-                    <input type="text" name="lastName" placeholder="Sobrenome" />
+                    <input type="text" name="name" placeholder="Nome" />
                     <input type="text" name="phone" placeholder="Telefone" />
                     <input type="text" name="email" placeholder="E-mail" />
                     <input type="text" name="cpf" placeholder="CPF (Opcional)" />

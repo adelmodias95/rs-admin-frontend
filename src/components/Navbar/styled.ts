@@ -22,6 +22,7 @@ const Header = styled.header`
         font-weight: 700;
         color: ${VARIABLES.lightTheme.mainColor};
         white-space: nowrap;
+        margin: 0;
 
         &.text-center {
             text-align: center;
@@ -51,6 +52,11 @@ const Header = styled.header`
                 }
             }
         }
+    }
+
+    svg {
+        font-size: 25px;
+        cursor: pointer;
     }
 `;
 

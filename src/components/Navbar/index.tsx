@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
 
+import { MdOutlineLogout } from "react-icons/md";
+
 import { Header } from "./styled";
 
 export function NavBar() {
@@ -33,9 +35,7 @@ export function NavBar() {
                         </nav>
                         <ul>
                             <li>
-                                <button onClick={() => logout()}>
-                                    <strong>Logout</strong>
-                                </button>
+                                <MdOutlineLogout onClick={() => logout()} />
                             </li>
                         </ul>
                     </div>

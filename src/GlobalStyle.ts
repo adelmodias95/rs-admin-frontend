@@ -113,8 +113,14 @@ const GlobalStyles = createGlobalStyle`
     }
 
     form {
+        label{
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
         input,
-        select {
+        select,
+        textarea {
             display: block;
             width: 100%;
             margin-bottom: 1rem;
@@ -128,6 +134,18 @@ const GlobalStyles = createGlobalStyle`
                 background: #f1f1f1;
                 color: ${VARIABLES.lightTheme.textColor};
                 cursor: not-allowed;
+            }
+        }
+
+        fieldset{
+            padding: 0;
+            margin: 0;
+            border: none;
+            display: flex;
+            align-items: center;
+
+            div{
+                width: 100%;
             }
         }
 
