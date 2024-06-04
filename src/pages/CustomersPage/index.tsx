@@ -1,17 +1,55 @@
+import React from "react";
 import { useState, useEffect } from "react";
-import ReactModal from "react-modal";
-import { Link } from "react-router-dom";
 import { FaEye, FaRegTrashAlt } from "react-icons/fa";
-import Swal from "sweetalert2";
 
 import api from "../../services/api";
 
-import { Table, ModalCloseButton } from "./style";
-import { PageHeaderContainer } from "../../GlobalStyle";
+import {
+    Flex,
+    Container,
+    Heading,
+    Button,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+    FormControl,
+    FormLabel,
+    Input,
+    useToast,
+    Table,
+    Thead,
+    Tr,
+    Th,
+    Tbody,
+    Td,
+    AlertDialog,
+    AlertDialogOverlay,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogBody,
+    AlertDialogFooter,
+    Select,
+} from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
 
 const CustomersPage = () => {
     let [customers, setCustomers] = useState([]);
-    let [openModal, setOpenModal] = useState(false);
+
+    let [customerToDelete, setCustomerToDelete] = useState(0);
+
+    const navigate = useNavigate();
+
+    // Modal Add
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
+
+    // Modal delete
+    const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure();
+    const cancelRef = React.useRef();
 
     async function getCustomers() {
         api.get("customers", {
@@ -35,78 +73,89 @@ const CustomersPage = () => {
         let email = event.target.email.value;
         let cpf = event.target.cpf.value;
         let gender = event.target.gender.value;
-        let userId = customers[0].userId;
+        let userId = 1;
 
-        api.post(
-            "customers",
-            {
-                name,
-                phone,
-                email,
-                cpf,
-                gender,
-                userId,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        const addPromise = new Promise((resolve, reject) => {
+            api.post(
+                "customers",
+                {
+                    name,
+                    phone,
+                    email,
+                    cpf,
+                    gender,
+                    userId,
                 },
-            }
-        )
-            .then((response) => {
-                let resJson = response.data;
-
-                setCustomers([resJson, ...customers]);
-                setOpenModal(false);
-
-                Swal.fire({
-                    title: "Cadastrado com sucesso!",
-                    text: "O novo cliente foi cadastrado no banco de dados.",
-                    icon: "success",
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    async function deleteCustomer(event) {
-        event.preventDefault();
-        let customerId = event.target.dataset.customerId;
-
-        Swal.fire({
-            title: "Você tem certeza?",
-            text: "Essa ação é irreversível.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#C667AD",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Sim, deletar cadastro!",
-            cancelButtonText: "Cancelar",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                api.delete("customers", {
-                    data: { id: customerId },
+                {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     },
+                }
+            )
+                .then((response) => {
+                    let resJson = response.data;
+
+                    setCustomers([resJson, ...customers]);
+
+                    onClose();
+
+                    resolve(resJson);
                 })
-                    .then((response) => {
-                        let customersArr = [...customers];
-                        let newCustomersArr = customersArr.filter((item) => item.id !== Number(customerId));
+                .catch((error) => {
+                    console.log(error);
+                });
+        });
 
-                        setCustomers(newCustomersArr);
+        toast.promise(addPromise, {
+            success: {
+                title: "Cliente adicionado!",
+                description: "Você já pode visualiza-lo na lista de clientes.",
+            },
+            error: {
+                title: "Erro!",
+                description: "Houve um erro ao tentar adicionar o cliente. Tente novamente.",
+            },
+            loading: { title: "Salvando...", description: "Aguarde." },
+        });
+    }
 
-                        Swal.fire({
-                            title: "Deletado!",
-                            text: "Cadastro deletado com sucesso.",
-                            icon: "success",
-                        });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+    async function deleteCustomer() {
+        let customerId = customerToDelete;
+
+        const deletePromise = new Promise((resolve, reject) => {
+            api.delete("customers", {
+                data: { id: customerId },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            })
+                .then(() => {
+                    let customersArr = [...customers];
+                    let newCustomersArr = customersArr.filter(
+                        (item) => item.id !== Number(customerId)
+                    );
+
+                    setCustomers(newCustomersArr);
+
+                    onCloseDelete();
+
+                    resolve(newCustomersArr);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        });
+
+        toast.promise(deletePromise, {
+            success: {
+                title: "Cliente deletado!",
+                description: "O cliente selecionado foi deletado do sistema.",
+            },
+            error: {
+                title: "Erro!",
+                description: "Houve um erro ao tentar deletar o cliente. Tente novamente.",
+            },
+            loading: { title: "Deletando...", description: "Aguarde." },
         });
     }
 
@@ -115,45 +164,158 @@ const CustomersPage = () => {
     }, []);
 
     return (
-        <>
-            <PageHeaderContainer>
-                <h1>Meus Clientes</h1>
-                <button onClick={() => setOpenModal(true)}>Adicionar cliente</button>
-            </PageHeaderContainer>
+        <Container maxW="1140px" minH="100vh" backgroundColor="white" paddingBottom="4rem">
+            <Flex
+                paddingTop="3rem"
+                marginBottom="4rem"
+                alignItems="center"
+                justifyContent="space-between"
+            >
+                <Heading as="h1">Meus Clientes</Heading>
+                <Button
+                    borderRadius={5}
+                    backgroundColor="primary"
+                    color="white"
+                    _hover={{ backgroundColor: "primaryHover" }}
+                    onClick={onOpen}
+                >
+                    Adicionar cliente
+                </Button>
+            </Flex>
 
             <Table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Celular</th>
-                        <th>E-mail</th>
-                        <th>Cadastro</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
+                <Thead backgroundColor="primary">
+                    <Tr>
+                        <Th color="white">ID</Th>
+                        <Th color="white">Nome</Th>
+                        <Th color="white">Celular</Th>
+                        <Th color="white">E-mail</Th>
+                        <Th color="white">Cadastro</Th>
+                        <Th color="white" textAlign="center">
+                            Ações
+                        </Th>
+                    </Tr>
+                </Thead>
+                <Tbody>
                     {customers.map((customer) => (
-                        <tr key={customer.id}>
-                            <td style={{ textAlign: "center" }}>{customer.id}</td>
-                            <td>{customer.name}</td>
-                            <td>{customer.phone ? customer.phone : "Não informado"}</td>
-                            <td>{customer.email ? customer.email : "Não informado"}</td>
-                            <td>{new Intl.DateTimeFormat("pt-BR").format(new Date(customer.createdAt))}</td>
-                            <td>
-                                <Link to={"/clientes/" + customer.id} title="Visualizar cadastro completo">
-                                    <FaEye />{" "}
-                                </Link>
-                                <a href="" onClick={deleteCustomer} data-customer-id={customer.id} title="Deletar cadastro">
+                        <Tr key={customer.id}>
+                            <Td style={{ textAlign: "center" }}>{customer.id}</Td>
+                            <Td>{customer.name}</Td>
+                            <Td>{customer.phone ? customer.phone : "Não informado"}</Td>
+                            <Td>{customer.email ? customer.email : "Não informado"}</Td>
+                            <Td>
+                                {new Intl.DateTimeFormat("pt-BR").format(
+                                    new Date(customer.createdAt)
+                                )}
+                            </Td>
+                            <Td textAlign="center">
+                                <Button
+                                    backgroundColor="transparent"
+                                    title="Visualizar cadastro completo"
+                                    onClick={() => {
+                                        navigate(`/clientes/${customer.id}`);
+                                    }}
+                                >
+                                    <FaEye />
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        onOpenDelete();
+                                        setCustomerToDelete(customer.id);
+                                    }}
+                                    title="Deletar cadastro"
+                                    backgroundColor="transparent"
+                                >
                                     <FaRegTrashAlt />
-                                </a>
-                            </td>
-                        </tr>
+                                </Button>
+                            </Td>
+                        </Tr>
                     ))}
-                </tbody>
+                </Tbody>
             </Table>
 
-            <ReactModal
+            {/* Remover */}
+            <AlertDialog
+                isOpen={isOpenDelete}
+                leastDestructiveRef={cancelRef}
+                onClose={onCloseDelete}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Deletar serviço
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            Tem certeza? Você não pode desfazer esta ação posteriormente.
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button
+                                ref={cancelRef}
+                                onClick={() => {
+                                    onCloseDelete();
+                                    setCustomerToDelete(0);
+                                }}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button colorScheme="red" onClick={deleteCustomer} ml={3}>
+                                Deletar
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
+
+            {/* Adicionar */}
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Adicionar serviço</ModalHeader>
+                    <ModalCloseButton />
+
+                    <ModalBody>
+                        <form onSubmit={addCustomer}>
+                            <FormControl>
+                                <FormLabel>Nome</FormLabel>
+                                <Input type="text" name="name" />
+                            </FormControl>
+                            <FormControl marginTop="1rem">
+                                <FormLabel>Telefone / Celular</FormLabel>
+                                <Input type="text" name="phone" />
+                            </FormControl>
+                            <FormControl marginTop="1rem">
+                                <FormLabel>E-mail</FormLabel>
+                                <Input type="email" name="email" />
+                            </FormControl>
+                            <FormControl marginTop="1rem">
+                                <FormLabel>CPF</FormLabel>
+                                <Input type="text" name="cpf" />
+                            </FormControl>
+                            <FormControl marginTop="1rem">
+                                <FormLabel>Gênero</FormLabel>
+                                <Select name="gender" placeholder="selecione uma opção">
+                                    <option value="feminino">Feminino</option>
+                                    <option value="masculino">Masculino</option>
+                                </Select>
+                            </FormControl>
+                            <Button
+                                marginTop="1rem"
+                                borderRadius={5}
+                                backgroundColor="primary"
+                                color="white"
+                                _hover={{ backgroundColor: "primaryHover" }}
+                                type="submit"
+                            >
+                                Salvar
+                            </Button>
+                        </form>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+
+            {/* <ReactModal
                 isOpen={openModal}
                 onRequestClose={() => setOpenModal(true)}
                 // className="modal-content"
@@ -178,8 +340,8 @@ const CustomersPage = () => {
                     </select>
                     <button>Cadastrar</button>
                 </form>
-            </ReactModal>
-        </>
+            </ReactModal> */}
+        </Container>
     );
 };
 

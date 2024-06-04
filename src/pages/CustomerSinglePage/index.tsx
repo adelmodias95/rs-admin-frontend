@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Swal from "sweetalert2";
 
 import api from "../../services/api";
 
-import { PageHeaderContainer } from "../../GlobalStyle";
 import { CustomerHistory } from "../../components/CustomerHistory";
+
+import {
+    Container,
+    Flex,
+    Heading,
+    Button,
+    FormControl,
+    FormLabel,
+    Input,
+    Select,
+    useToast,
+} from "@chakra-ui/react";
 
 interface CustomerInterface {
     id: number;
@@ -35,6 +45,8 @@ export const CustomerSinglePage = () => {
     const [customer, setCustomer] = useState<CustomerInterface>(initCustomer);
     const [editAllowed, setEditAllowed] = useState(false);
 
+    const toast = useToast();
+
     async function GetCustomerInfo() {
         api.get(`/customer?id=${id}`, {
             headers: {
@@ -44,8 +56,6 @@ export const CustomerSinglePage = () => {
             .then((response) => {
                 let dataJson = response.data;
                 setCustomer(dataJson);
-
-                console.log("dataJson => ", dataJson);
             })
             .catch((error) => {
                 console.log(error);
@@ -53,60 +63,44 @@ export const CustomerSinglePage = () => {
     }
 
     async function SaveCustomerInfo() {
-        api.patch(
-            "/customers",
-            {
-                id: customer.id,
-                data: {
-                    name: customer.name,
-                    phone: customer.phone,
-                    email: customer.email,
-                    cpf: customer.cpf,
-                    gender: customer.gender,
+        const saveInfoPromise = new Promise((resolve, reject) => {
+            api.patch(
+                "/customers",
+                {
+                    id: customer.id,
+                    data: {
+                        name: customer.name,
+                        phone: customer.phone,
+                        email: customer.email,
+                        cpf: customer.cpf,
+                        gender: customer.gender,
+                    },
                 },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                }
+            )
+                .then((response) => {
+                    resolve("success");
+                })
+                .catch((error) => {
+                    resolve(error);
+                });
+        });
+
+        toast.promise(saveInfoPromise, {
+            success: {
+                title: "Informações atualizadas!",
+                description: "As informações do cliente foram atualizadas.",
             },
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                },
-            }
-        )
-            .then((response) => {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    },
-                });
-
-                Toast.fire({
-                    icon: "success",
-                    title: "Dados alterados com sucesso!",
-                });
-            })
-            .catch((error) => {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    },
-                });
-
-                Toast.fire({
-                    icon: "error",
-                    title: "Não foi possível completar a solicitação.",
-                });
-            });
+            error: {
+                title: "Erro!",
+                description: "Houve um erro ao tentar atualizar o registro. Tente novamente.",
+            },
+            loading: { title: "Salvando...", description: "Aguarde." },
+        });
     }
 
     useEffect(() => {
@@ -114,17 +108,26 @@ export const CustomerSinglePage = () => {
     }, []);
 
     return (
-        <>
-            <PageHeaderContainer>
-                <h1>Editar cliente - {customer ? customer.name : ""}</h1>
-                <button
+        <Container maxW="1140px" backgroundColor="white" paddingBottom="4rem">
+            <Flex
+                paddingTop="3rem"
+                marginBottom="4rem"
+                alignItems="center"
+                justifyContent="space-between"
+            >
+                <Heading as="h1">Editar cliente - {customer ? customer.name : ""}</Heading>
+                <Button
+                    borderRadius={5}
+                    backgroundColor="primary"
+                    color="white"
+                    _hover={{ backgroundColor: "primaryHover" }}
                     onClick={() => {
                         setEditAllowed(!editAllowed);
                     }}
                 >
                     {!editAllowed ? "Liberar edição" : "Bloquear edição"}
-                </button>
-            </PageHeaderContainer>
+                </Button>
+            </Flex>
 
             <form
                 onSubmit={(Event) => {
@@ -132,63 +135,84 @@ export const CustomerSinglePage = () => {
                 }}
                 style={{ marginBottom: "4rem" }}
             >
-                <input
-                    type="text"
-                    name="name"
-                    onChange={(e) => {
-                        setCustomer({ ...customer, name: e.target.value });
-                    }}
-                    placeholder="Nome"
-                    value={customer.name}
-                    disabled={editAllowed ? false : true}
-                />
-                <input
-                    type="text"
-                    name="phone"
-                    onChange={(e) => {
-                        setCustomer({ ...customer, phone: e.target.value });
-                    }}
-                    placeholder="Telefone"
-                    value={customer.phone}
-                    disabled={editAllowed ? false : true}
-                />
-                <input
-                    type="text"
-                    name="email"
-                    onChange={(e) => {
-                        setCustomer({ ...customer, email: e.target.value });
-                    }}
-                    placeholder="E-mail"
-                    value={customer.email}
-                    disabled={editAllowed ? false : true}
-                />
-                <input
-                    type="text"
-                    name="cpf"
-                    onChange={(e) => {
-                        setCustomer({ ...customer, cpf: e.target.value });
-                    }}
-                    placeholder="CPF (Opcional)"
-                    value={customer.cpf}
-                    disabled={editAllowed ? false : true}
-                />
-                <select
-                    name="gender"
-                    onChange={(e) => {
-                        setCustomer({ ...customer, gender: e.target.value });
-                    }}
-                    value={customer.gender}
+                <FormControl>
+                    <FormLabel>Nome</FormLabel>
+                    <Input
+                        type="text"
+                        name="name"
+                        onChange={(e) => {
+                            setCustomer({ ...customer, name: e.target.value });
+                        }}
+                        value={customer.name}
+                        disabled={editAllowed ? false : true}
+                        backgroundColor="white"
+                    />
+                </FormControl>
+                <FormControl marginTop="1rem">
+                    <FormLabel>Telefone</FormLabel>
+                    <Input
+                        type="text"
+                        name="phone"
+                        onChange={(e) => {
+                            setCustomer({ ...customer, phone: e.target.value });
+                        }}
+                        value={customer.phone}
+                        disabled={editAllowed ? false : true}
+                    />
+                </FormControl>
+                <FormControl marginTop="1rem">
+                    <FormLabel>E-mail</FormLabel>
+                    <Input
+                        type="email"
+                        name="email"
+                        onChange={(e) => {
+                            setCustomer({ ...customer, email: e.target.value });
+                        }}
+                        value={customer.email}
+                        disabled={editAllowed ? false : true}
+                    />
+                </FormControl>
+                <FormControl marginTop="1rem">
+                    <FormLabel>CPF</FormLabel>
+                    <Input
+                        type="text"
+                        name="cpf"
+                        onChange={(e) => {
+                            setCustomer({ ...customer, cpf: e.target.value });
+                        }}
+                        value={customer.cpf}
+                        disabled={editAllowed ? false : true}
+                    />
+                </FormControl>
+                <FormControl marginTop="1rem">
+                    <FormLabel>Gênero</FormLabel>
+                    <Select
+                        name="gender"
+                        placeholder="selecione uma opção"
+                        onChange={(e) => {
+                            setCustomer({ ...customer, gender: e.target.value });
+                        }}
+                        value={customer.gender}
+                        disabled={editAllowed ? false : true}
+                    >
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                    </Select>
+                </FormControl>
+                <Button
+                    marginTop="1rem"
+                    borderRadius={5}
+                    backgroundColor="primary"
+                    color="white"
+                    _hover={{ backgroundColor: "primaryHover" }}
+                    onClick={SaveCustomerInfo}
                     disabled={editAllowed ? false : true}
                 >
-                    <option value="feminino">Feminino</option>
-                    <option value="masculino">Masculino</option>
-                </select>{" "}
-                <button onClick={SaveCustomerInfo} disabled={editAllowed ? false : true}>
-                    Salvar edição
-                </button>
+                    Salvar
+                </Button>
             </form>
 
             <CustomerHistory />
-        </>
+        </Container>
     );
 };

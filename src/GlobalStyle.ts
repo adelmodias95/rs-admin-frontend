@@ -59,13 +59,13 @@ const GlobalStyles = createGlobalStyle`
         margin-right: auto;
         margin-left: auto;
 
-        @media (min-width: ${VARIABLES.screenSm}) {
+        /* @media (min-width: ${VARIABLES.screenSm}) {
             max-width: 540px;
         }
 
         @media (min-width: ${VARIABLES.screenMd}) {
             max-width: 720px;
-        }
+        } */
 
         @media (min-width: ${VARIABLES.screenLg}) {
             max-width: 960px;

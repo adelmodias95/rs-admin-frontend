@@ -5,16 +5,8 @@ import { VARIABLES } from "../../GlobalStyle";
 const Header = styled.header`
     padding: 1rem 0;
     box-shadow: ${VARIABLES.lightTheme.boxShadow};
-
-    .container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        &.justify-center {
-            justify-content: center;
-        }
-    }
+    background-color: white;
+    z-index: 99;
 
     h1 {
         display: block;
