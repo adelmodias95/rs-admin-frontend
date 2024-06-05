@@ -115,7 +115,7 @@ export const CustomerSinglePage = () => {
                 alignItems="center"
                 justifyContent="space-between"
             >
-                <Heading as="h1">Editar cliente - {customer ? customer.name : ""}</Heading>
+                <Heading as="h1">Visualizar cliente: {customer ? customer.name : ""}</Heading>
                 <Button
                     borderRadius={5}
                     backgroundColor="primary"

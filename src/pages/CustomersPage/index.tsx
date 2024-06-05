@@ -70,9 +70,9 @@ const CustomersPage = () => {
         event.preventDefault();
         let name = event.target.name.value;
         let phone = event.target.phone.value;
-        let email = event.target.email.value;
-        let cpf = event.target.cpf.value;
-        let gender = event.target.gender.value;
+        // let email = event.target.email.value;
+        // let cpf = event.target.cpf.value;
+        // let gender = event.target.gender.value;
         let userId = 1;
 
         const addPromise = new Promise((resolve, reject) => {
@@ -81,9 +81,9 @@ const CustomersPage = () => {
                 {
                     name,
                     phone,
-                    email,
-                    cpf,
-                    gender,
+                    // email,
+                    // cpf,
+                    // gender,
                     userId,
                 },
                 {
@@ -285,7 +285,7 @@ const CustomersPage = () => {
                                 <FormLabel>Telefone / Celular</FormLabel>
                                 <Input type="text" name="phone" />
                             </FormControl>
-                            <FormControl marginTop="1rem">
+                            {/* <FormControl marginTop="1rem">
                                 <FormLabel>E-mail</FormLabel>
                                 <Input type="email" name="email" />
                             </FormControl>
@@ -299,7 +299,7 @@ const CustomersPage = () => {
                                     <option value="feminino">Feminino</option>
                                     <option value="masculino">Masculino</option>
                                 </Select>
-                            </FormControl>
+                            </FormControl> */}
                             <Button
                                 marginTop="1rem"
                                 borderRadius={5}
