@@ -5,6 +5,7 @@ import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import api from "../../services/api";
 
 import {
+    Box,
     Flex,
     Container,
     Heading,
@@ -128,9 +129,7 @@ const ServicesPage = () => {
             })
                 .then(() => {
                     let customersArr = [...customers];
-                    let newCustomersArr = customersArr.filter(
-                        (item) => item.id !== Number(customerId)
-                    );
+                    let newCustomersArr = customersArr.filter((item) => item.id !== Number(customerId));
 
                     setCustomers(newCustomersArr);
 
@@ -162,82 +161,63 @@ const ServicesPage = () => {
 
     return (
         <Container maxW="1140px" minH="100vh" backgroundColor="white" paddingBottom="4rem">
-            <Flex
-                paddingTop="3rem"
-                marginBottom="4rem"
-                alignItems="center"
-                justifyContent="space-between"
-            >
+            <Flex flexDirection={["column", "row"]} paddingTop="3rem" marginBottom="4rem" alignItems={{ base: "flex-start", lg: "center" }} justifyContent="space-between">
                 <Heading as="h1">Meus Serviços</Heading>
-                <Button
-                    borderRadius={5}
-                    backgroundColor="primary"
-                    color="white"
-                    _hover={{ backgroundColor: "primaryHover" }}
-                    onClick={onOpen}
-                >
+                <Button marginTop={{ base: "2rem", lg: "0" }} borderRadius={5} backgroundColor="primary" color="white" _hover={{ backgroundColor: "primaryHover" }} onClick={onOpen}>
                     Adicionar serviço
                 </Button>
             </Flex>
 
-            <Table>
-                <Thead backgroundColor="primary">
-                    <Tr>
-                        <Th color="white">ID</Th>
-                        <Th color="white">Nome</Th>
-                        <Th color="white">Preço</Th>
-                        <Th color="white">Duração</Th>
-                        <Th color="white" textAlign="center">
-                            Ações
-                        </Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {customers.map((customer) => (
-                        <Tr key={customer.id}>
-                            <Td>{customer.id}</Td>
-                            <Td>{customer.title}</Td>
-                            <Td>{customer.price ? "R$ " + customer.price : "Não informado"}</Td>
-                            <Td>
-                                {customer.timeHours
-                                    ? customer.timeHours + "h" + customer.timeMinutes
-                                    : "Não informado"}
-                            </Td>
-                            <Td textAlign="center">
-                                <Button backgroundColor="transparent">
-                                    <FaEdit />{" "}
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        onOpenDelete();
-                                        setCustomerToDelete(customer.id);
-                                    }}
-                                    title="Deletar cadastro"
-                                    backgroundColor="transparent"
-                                >
-                                    <FaRegTrashAlt />
-                                </Button>
-                            </Td>
+            <Box overflowX="auto">
+                <Table>
+                    <Thead backgroundColor="primary">
+                        <Tr>
+                            <Th color="white">ID</Th>
+                            <Th color="white">Nome</Th>
+                            <Th color="white">Preço</Th>
+                            <Th color="white">Duração</Th>
+                            <Th color="white" textAlign="center">
+                                Ações
+                            </Th>
                         </Tr>
-                    ))}
-                </Tbody>
-            </Table>
+                    </Thead>
+                    <Tbody>
+                        {customers.map((customer) => (
+                            <Tr key={customer.id}>
+                                <Td>{customer.id}</Td>
+                                <Td>{customer.title}</Td>
+                                <Td>{customer.price ? "R$ " + customer.price : "Não informado"}</Td>
+                                <Td>{customer.timeHours ? customer.timeHours + "h" + customer.timeMinutes : "Não informado"}</Td>
+                                <Td textAlign="center">
+                                    <Button backgroundColor="transparent">
+                                        <FaEdit />{" "}
+                                    </Button>
+                                    <Button
+                                        onClick={() => {
+                                            onOpenDelete();
+                                            setCustomerToDelete(customer.id);
+                                        }}
+                                        title="Deletar cadastro"
+                                        backgroundColor="transparent"
+                                    >
+                                        <FaRegTrashAlt />
+                                    </Button>
+                                </Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+            </Box>
 
             {/* Remover */}
-            <AlertDialog
-                isOpen={isOpenDelete}
-                leastDestructiveRef={cancelRef}
-                onClose={onCloseDelete}
-            >
+            <AlertDialog isOpen={isOpenDelete} leastDestructiveRef={cancelRef} onClose={onCloseDelete}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             Deletar serviço
                         </AlertDialogHeader>
 
-                        <AlertDialogBody>
-                            Tem certeza? Você não pode desfazer esta ação posteriormente.
-                        </AlertDialogBody>
+                        <AlertDialogBody>Tem certeza? Você não pode desfazer esta ação posteriormente.</AlertDialogBody>
 
                         <AlertDialogFooter>
                             <Button
@@ -274,12 +254,7 @@ const ServicesPage = () => {
                                 <FormLabel>Preço</FormLabel>
                                 <Input type="number" step=".01" name="price" />
                             </FormControl>
-                            <Flex
-                                alignItems="center"
-                                justifyContent="space-between"
-                                gap="10px"
-                                marginTop="1rem"
-                            >
+                            <Flex alignItems="center" justifyContent="space-between" gap="10px" marginTop="1rem">
                                 <FormControl>
                                     <FormLabel>Hora</FormLabel>
                                     <NumberInput max={24} min={0} name="timeHours">
@@ -307,14 +282,7 @@ const ServicesPage = () => {
                                 <FormLabel>Anotação</FormLabel>
                                 <Textarea name="observation" />
                             </FormControl>
-                            <Button
-                                marginTop="1rem"
-                                borderRadius={5}
-                                backgroundColor="primary"
-                                color="white"
-                                _hover={{ backgroundColor: "primaryHover" }}
-                                type="submit"
-                            >
+                            <Button marginTop="1rem" borderRadius={5} backgroundColor="primary" color="white" _hover={{ backgroundColor: "primaryHover" }} type="submit">
                                 Salvar
                             </Button>
                         </form>

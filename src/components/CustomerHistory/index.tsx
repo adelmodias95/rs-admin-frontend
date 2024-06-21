@@ -172,15 +172,9 @@ export const CustomerHistory = () => {
 
     return (
         <>
-            <Flex marginBottom="1.5rem" alignItems="center" justifyContent="space-between">
+            <Flex flexDirection={["column", "row"]} marginBottom="1.5rem" alignItems={{ base: "flex-start", lg: "center" }} justifyContent="space-between">
                 <Heading as="h2">Histórico do cliente</Heading>
-                <Button
-                    borderRadius={5}
-                    backgroundColor="primary"
-                    color="white"
-                    _hover={{ backgroundColor: "primaryHover" }}
-                    onClick={onOpen}
-                >
+                <Button marginTop={{ base: "2rem", lg: "0" }} borderRadius={5} backgroundColor="primary" color="white" _hover={{ backgroundColor: "primaryHover" }} onClick={onOpen}>
                     Adicionar histórico
                 </Button>
             </Flex>
@@ -216,8 +210,7 @@ export const CustomerHistory = () => {
                                     <strong>Preço:</strong> R$ {history.price}
                                 </p>
                                 <p>
-                                    <strong>Tempo de execução:</strong> {history.timeHours}h{" "}
-                                    {history.timeMinutes}m
+                                    <strong>Tempo de execução:</strong> {history.timeHours}h {history.timeMinutes}m
                                 </p>
                             </>
                         ) : (
@@ -258,8 +251,7 @@ export const CustomerHistory = () => {
                         )}
 
                         <p>
-                            <strong>Data:</strong>{" "}
-                            {new Intl.DateTimeFormat("pt-BR").format(new Date(history.createdAt))}
+                            <strong>Data:</strong> {new Intl.DateTimeFormat("pt-BR").format(new Date(history.createdAt))}
                         </p>
                     </div>
                 ))}
@@ -300,12 +292,7 @@ export const CustomerHistory = () => {
                                 <>
                                     <FormControl marginTop="1rem">
                                         <FormLabel>Nome do serviço</FormLabel>
-                                        <Select
-                                            placeholder="selecione uma opção"
-                                            id="serviceName"
-                                            name="serviceName"
-                                            onChange={(e) => fillServiceDetails(e.target.value)}
-                                        >
+                                        <Select placeholder="selecione uma opção" id="serviceName" name="serviceName" onChange={(e) => fillServiceDetails(e.target.value)}>
                                             {services.map((service) => (
                                                 <option key={service.id} value={service.title}>
                                                     {service.title}
@@ -315,27 +302,12 @@ export const CustomerHistory = () => {
                                     </FormControl>
                                     <FormControl marginTop="1rem">
                                         <FormLabel>Valor do serviço</FormLabel>
-                                        <Input
-                                            type="number"
-                                            id="servicePrice"
-                                            name="price"
-                                            step=".01"
-                                        />
+                                        <Input type="number" id="servicePrice" name="price" step=".01" />
                                     </FormControl>
-                                    <Flex
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        gap="10px"
-                                        marginTop="1rem"
-                                    >
+                                    <Flex alignItems="center" justifyContent="space-between" gap="10px" marginTop="1rem">
                                         <FormControl>
                                             <FormLabel>Hora</FormLabel>
-                                            <NumberInput
-                                                max={24}
-                                                min={0}
-                                                id="timeHours"
-                                                name="timeHours"
-                                            >
+                                            <NumberInput max={24} min={0} id="timeHours" name="timeHours">
                                                 <NumberInputField />
                                                 <NumberInputStepper>
                                                     <NumberIncrementStepper />
@@ -346,12 +318,7 @@ export const CustomerHistory = () => {
                                         </FormControl>
                                         <FormControl>
                                             <FormLabel>Minutos</FormLabel>
-                                            <NumberInput
-                                                max={60}
-                                                min={0}
-                                                id="timeMinutes"
-                                                name="timeMinutes"
-                                            >
+                                            <NumberInput max={60} min={0} id="timeMinutes" name="timeMinutes">
                                                 <NumberInputField />
                                                 <NumberInputStepper>
                                                     <NumberIncrementStepper />
@@ -390,23 +357,14 @@ export const CustomerHistory = () => {
                                 </>
                             )}
 
-                            {(historyType == "service" ||
-                                historyType == "payment" ||
-                                historyType == "payment-reversal") && (
+                            {(historyType == "service" || historyType == "payment" || historyType == "payment-reversal") && (
                                 <FormControl marginTop="1rem">
                                     <FormLabel>Descrição / Observação</FormLabel>
                                     <Textarea name="description" />
                                 </FormControl>
                             )}
 
-                            <Button
-                                marginTop="1rem"
-                                borderRadius={5}
-                                backgroundColor="primary"
-                                color="white"
-                                _hover={{ backgroundColor: "primaryHover" }}
-                                type="submit"
-                            >
+                            <Button marginTop="1rem" borderRadius={5} backgroundColor="primary" color="white" _hover={{ backgroundColor: "primaryHover" }} type="submit">
                                 Salvar
                             </Button>
                         </form>

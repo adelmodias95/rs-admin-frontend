@@ -5,6 +5,7 @@ import { FaEye, FaRegTrashAlt } from "react-icons/fa";
 import api from "../../services/api";
 
 import {
+    Box,
     Flex,
     Container,
     Heading,
@@ -131,9 +132,7 @@ const CustomersPage = () => {
             })
                 .then(() => {
                     let customersArr = [...customers];
-                    let newCustomersArr = customersArr.filter(
-                        (item) => item.id !== Number(customerId)
-                    );
+                    let newCustomersArr = customersArr.filter((item) => item.id !== Number(customerId));
 
                     setCustomers(newCustomersArr);
 
@@ -165,90 +164,71 @@ const CustomersPage = () => {
 
     return (
         <Container maxW="1140px" minH="100vh" backgroundColor="white" paddingBottom="4rem">
-            <Flex
-                paddingTop="3rem"
-                marginBottom="4rem"
-                alignItems="center"
-                justifyContent="space-between"
-            >
+            <Flex flexDirection={["column", "row"]} paddingTop="3rem" marginBottom="4rem" alignItems={{ base: "flex-start", lg: "center" }} justifyContent="space-between">
                 <Heading as="h1">Meus Clientes</Heading>
-                <Button
-                    borderRadius={5}
-                    backgroundColor="primary"
-                    color="white"
-                    _hover={{ backgroundColor: "primaryHover" }}
-                    onClick={onOpen}
-                >
+                <Button marginTop={{ base: "2rem", lg: "0" }} borderRadius={5} backgroundColor="primary" color="white" _hover={{ backgroundColor: "primaryHover" }} onClick={onOpen}>
                     Adicionar cliente
                 </Button>
             </Flex>
 
-            <Table>
-                <Thead backgroundColor="primary">
-                    <Tr>
-                        <Th color="white">ID</Th>
-                        <Th color="white">Nome</Th>
-                        <Th color="white">Celular</Th>
-                        <Th color="white">E-mail</Th>
-                        <Th color="white">Cadastro</Th>
-                        <Th color="white" textAlign="center">
-                            Ações
-                        </Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {customers.map((customer) => (
-                        <Tr key={customer.id}>
-                            <Td style={{ textAlign: "center" }}>{customer.id}</Td>
-                            <Td>{customer.name}</Td>
-                            <Td>{customer.phone ? customer.phone : "Não informado"}</Td>
-                            <Td>{customer.email ? customer.email : "Não informado"}</Td>
-                            <Td>
-                                {new Intl.DateTimeFormat("pt-BR").format(
-                                    new Date(customer.createdAt)
-                                )}
-                            </Td>
-                            <Td textAlign="center">
-                                <Button
-                                    backgroundColor="transparent"
-                                    title="Visualizar cadastro completo"
-                                    onClick={() => {
-                                        navigate(`/clientes/${customer.id}`);
-                                    }}
-                                >
-                                    <FaEye />
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        onOpenDelete();
-                                        setCustomerToDelete(customer.id);
-                                    }}
-                                    title="Deletar cadastro"
-                                    backgroundColor="transparent"
-                                >
-                                    <FaRegTrashAlt />
-                                </Button>
-                            </Td>
+            <Box overflowX="auto">
+                <Table>
+                    <Thead backgroundColor="primary">
+                        <Tr>
+                            <Th color="white">ID</Th>
+                            <Th color="white">Nome</Th>
+                            <Th color="white">Celular</Th>
+                            <Th color="white">E-mail</Th>
+                            <Th color="white">Cadastro</Th>
+                            <Th color="white" textAlign="center">
+                                Ações
+                            </Th>
                         </Tr>
-                    ))}
-                </Tbody>
-            </Table>
+                    </Thead>
+                    <Tbody>
+                        {customers.map((customer) => (
+                            <Tr key={customer.id}>
+                                <Td style={{ textAlign: "center" }}>{customer.id}</Td>
+                                <Td>{customer.name}</Td>
+                                <Td>{customer.phone ? customer.phone : "Não informado"}</Td>
+                                <Td>{customer.email ? customer.email : "Não informado"}</Td>
+                                <Td>{new Intl.DateTimeFormat("pt-BR").format(new Date(customer.createdAt))}</Td>
+                                <Td textAlign="center">
+                                    <Button
+                                        backgroundColor="transparent"
+                                        title="Visualizar cadastro completo"
+                                        onClick={() => {
+                                            navigate(`/clientes/${customer.id}`);
+                                        }}
+                                    >
+                                        <FaEye />
+                                    </Button>
+                                    <Button
+                                        onClick={() => {
+                                            onOpenDelete();
+                                            setCustomerToDelete(customer.id);
+                                        }}
+                                        title="Deletar cadastro"
+                                        backgroundColor="transparent"
+                                    >
+                                        <FaRegTrashAlt />
+                                    </Button>
+                                </Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+            </Box>
 
             {/* Remover */}
-            <AlertDialog
-                isOpen={isOpenDelete}
-                leastDestructiveRef={cancelRef}
-                onClose={onCloseDelete}
-            >
+            <AlertDialog isOpen={isOpenDelete} leastDestructiveRef={cancelRef} onClose={onCloseDelete}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             Deletar serviço
                         </AlertDialogHeader>
 
-                        <AlertDialogBody>
-                            Tem certeza? Você não pode desfazer esta ação posteriormente.
-                        </AlertDialogBody>
+                        <AlertDialogBody>Tem certeza? Você não pode desfazer esta ação posteriormente.</AlertDialogBody>
 
                         <AlertDialogFooter>
                             <Button
@@ -300,14 +280,7 @@ const CustomersPage = () => {
                                     <option value="masculino">Masculino</option>
                                 </Select>
                             </FormControl> */}
-                            <Button
-                                marginTop="1rem"
-                                borderRadius={5}
-                                backgroundColor="primary"
-                                color="white"
-                                _hover={{ backgroundColor: "primaryHover" }}
-                                type="submit"
-                            >
+                            <Button marginTop="1rem" borderRadius={5} backgroundColor="primary" color="white" _hover={{ backgroundColor: "primaryHover" }} type="submit">
                                 Salvar
                             </Button>
                         </form>

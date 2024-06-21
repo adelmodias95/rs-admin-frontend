@@ -5,17 +5,7 @@ import api from "../../services/api";
 
 import { CustomerHistory } from "../../components/CustomerHistory";
 
-import {
-    Container,
-    Flex,
-    Heading,
-    Button,
-    FormControl,
-    FormLabel,
-    Input,
-    Select,
-    useToast,
-} from "@chakra-ui/react";
+import { Container, Flex, Heading, Button, FormControl, FormLabel, Input, Select, useToast } from "@chakra-ui/react";
 
 interface CustomerInterface {
     id: number;
@@ -109,14 +99,10 @@ export const CustomerSinglePage = () => {
 
     return (
         <Container maxW="1140px" backgroundColor="white" paddingBottom="4rem">
-            <Flex
-                paddingTop="3rem"
-                marginBottom="4rem"
-                alignItems="center"
-                justifyContent="space-between"
-            >
+            <Flex flexDirection={["column", "row"]} paddingTop="3rem" marginBottom="4rem" alignItems={{ base: "flex-start", lg: "center" }} justifyContent="space-between">
                 <Heading as="h1">Visualizar cliente: {customer ? customer.name : ""}</Heading>
                 <Button
+                    marginTop={{ base: "2rem", lg: "0" }}
                     borderRadius={5}
                     backgroundColor="primary"
                     color="white"
