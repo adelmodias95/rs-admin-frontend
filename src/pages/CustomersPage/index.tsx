@@ -33,7 +33,6 @@ import {
     AlertDialogHeader,
     AlertDialogBody,
     AlertDialogFooter,
-    Select,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 
