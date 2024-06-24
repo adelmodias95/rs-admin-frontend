@@ -1,7 +1,7 @@
 import { createAxiosClient } from "./createAxiosClient";
 import { useAuthStore } from "../stores/authStore";
 
-const BASE_URL = "https://rs-admin-backend-5caad7698e9f.herokuapp.com";
+const BASE_URL = "https://rs-estetica-api.onrender.com";
 // const BASE_URL = "http://localhost:3005/";
 const REFRESH_TOKEN_URL = `${BASE_URL}auth/refreshToken`;
 
