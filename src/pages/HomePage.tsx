@@ -4,7 +4,7 @@ import { Container, Flex, Heading, Text, Link as ChakraLink, LinkProps } from "@
 export function HomePage() {
     return (
         <Container maxW="1140px" minH="100vh" backgroundColor="white" paddingBottom="4rem">
-            <Flex flexDirection={["column", "row"]} paddingTop="3rem" marginBottom="4rem" alignItems={{ base: "flex-start", lg: "center" }} justifyContent="space-between">
+            <Flex flexDirection={["row", "column"]} paddingTop="3rem" marginBottom="4rem" alignItems={{ base: "flex-start", lg: "center" }} justifyContent="space-between">
                 <Heading as="h1" mb={"1.5rem"}>
                     Seja bem-vinda, Ronilda.
                 </Heading>
